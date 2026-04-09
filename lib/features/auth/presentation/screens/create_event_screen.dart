@@ -1,4 +1,3 @@
-import 'package:cash_flow/features/auth/components/auth_background.dart';
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,8 +58,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthScaffold(
-      child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
+      body: SafeArea(
+        child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -82,6 +83,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             _botaoCriar(),
             const SizedBox(height: 32),
           ],
+        ),
         ),
       ),
     );

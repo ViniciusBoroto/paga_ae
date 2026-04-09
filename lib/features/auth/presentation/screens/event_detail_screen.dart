@@ -1,4 +1,3 @@
-import 'package:cash_flow/features/auth/components/auth_background.dart';
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,8 +10,10 @@ class EventDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthScaffold(
-      child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
+      body: SafeArea(
+        child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -45,6 +46,7 @@ class EventDetailScreen extends StatelessWidget {
             SecondaryButton(text: 'Finalizar evento', onPressed: () {}),
             const SizedBox(height: 32),
           ],
+        ),
         ),
       ),
     );

@@ -1,4 +1,3 @@
-import 'package:cash_flow/features/auth/components/auth_background.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:cash_flow/features/auth/presentation/screens/create_event_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
@@ -17,20 +16,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthScaffold(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            _header(),
-            const SizedBox(height: 28),
-            _totalCard(),
-            const SizedBox(height: 28),
-            _titulo('Eventos'),
-            const SizedBox(height: 14),
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
+      floatingActionButton: _botaoFlutuante(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              _header(),
+              const SizedBox(height: 28),
+              _totalCard(),
+              const SizedBox(height: 28),
+              _titulo('Eventos'),
             _eventoCard(
               nome: 'Churrasco do Zé',
               data: '25 jul',
@@ -60,10 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
               valor: 'R\$ 100,00',
               prazo: 'Vence em 5 dias',
             ),
-            const SizedBox(height: 28),
-            _botaoCriarEvento(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 100),
           ],
+        ),
         ),
       ),
     );
@@ -275,9 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Botão criar evento
+  // MARK: - Botão flutuante
 
-  Widget _botaoCriarEvento() {
+  Widget _botaoFlutuante() {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -285,21 +285,22 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 17),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.green, AppColors.darkGreen]),
           borderRadius: BorderRadius.circular(999),
+          gradient: const LinearGradient(
+            colors: [AppColors.green, AppColors.darkGreen],
+          ),
           boxShadow: [
-            BoxShadow(color: AppColors.darkGreen.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 5)),
+            BoxShadow(color: AppColors.darkGreen.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 6)),
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(CupertinoIcons.add, color: Colors.white, size: 20),
             const SizedBox(width: 8),
-            Text('Criar evento', style: AppTextStyles.button(16)),
+            Text('Criar evento', style: AppTextStyles.button(15)),
           ],
         ),
       ),
