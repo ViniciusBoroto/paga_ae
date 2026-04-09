@@ -1,4 +1,4 @@
-import 'package:cash_flow/features/auth/presentation/screens/select_login.dart';
+import 'package:cash_flow/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const SelectLogin(),
+      home: const WelcomeScreen(),
     );
   }
 }

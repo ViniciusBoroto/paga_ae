@@ -1,6 +1,9 @@
+import 'package:cash_flow/features/auth/components/auth_background.dart';
+import 'package:cash_flow/features/auth/components/auth_buttons.dart';
+import 'package:cash_flow/features/auth/components/auth_input.dart';
+import 'package:cash_flow/features/auth/components/auth_styles.dart';
+import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
-import 'package:cash_flow/features/auth/presentation/widgets/auth_form_widgets.dart';
-import 'package:cash_flow/features/auth/presentation/widgets/auth_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,14 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // MARK: - Navigation
-
-  void _openRegister() {
-    Navigator.of(context).pushReplacement(
-      CupertinoPageRoute<void>(builder: (_) => const RegisterScreen()),
-    );
-  }
-
   // MARK: - Lifecycle
 
   @override
@@ -38,29 +33,29 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthPageScaffold(
+    return AuthScaffold(
       child: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: IntrinsicHeight(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _header(),
-                      const SizedBox(height: 22),
-                      _formFields(),
-                      const SizedBox(height: 22),
-                      _forgotPassword(),
-                      const Spacer(),
-                      _actions(),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    _header(),
+                    const SizedBox(height: 36),
+                    _formCard(),
+                    const SizedBox(height: 18),
+                    _forgotPassword(),
+                    const Spacer(),
+                    _actions(),
+                    const SizedBox(height: 28),
+                  ],
                 ),
               ),
             ),
@@ -73,30 +68,43 @@ class _LoginScreenState extends State<LoginScreen> {
   // MARK: - Sections
 
   Widget _header() {
-    return AuthHeaderBar(
-      title: 'Entrar',
-      subtitle: 'Acesse eventos, pendências e pagamentos do grupo.',
-      onBack: () => Navigator.of(context).pop(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AuthBackButton(onTap: () => Navigator.of(context).pop()),
+        const SizedBox(height: 20),
+        Text('Entrar', style: AppTextStyles.title(36)),
+        const SizedBox(height: 6),
+        Text(
+          'Acesse seus eventos e pagamentos do grupo.',
+          style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.55)),
+        ),
+      ],
     );
   }
 
-  Widget _formFields() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
+  Widget _formCard() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
+      ),
       child: Column(
         children: [
-          AuthLineInput(
-            title: 'Email',
+          AuthInput(
+            label: 'Email',
             placeholder: 'voce@email.com',
-            icon: AuthIcons.email,
+            icon: AppIcons.email,
             keyboardType: TextInputType.emailAddress,
             controller: _emailController,
           ),
-          const SizedBox(height: 20),
-          AuthLineInput(
-            title: 'Senha',
+          const SizedBox(height: 22),
+          AuthInput(
+            label: 'Senha',
             placeholder: 'Sua senha',
-            icon: AuthIcons.password,
+            icon: AppIcons.password,
             obscureText: true,
             controller: _passwordController,
           ),
@@ -106,56 +114,44 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _forgotPassword() {
-    return TextButton(
-      onPressed: () {},
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        alignment: Alignment.centerLeft,
-        overlayColor: Colors.transparent,
-      ),
+    return GestureDetector(
+      onTap: () {},
       child: Text(
         'Esqueci minha senha',
-        style: AuthTextStyles.body(
-          15,
-          color: AuthPalette.darkGreen.withValues(alpha: 0.82),
-        ),
+        style: AppTextStyles.body(13, color: AppColors.darkGreen.withValues(alpha: 0.65)),
       ),
     );
   }
 
   Widget _actions() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AuthPrimaryButton(text: 'Entrar', onPressed: () {}),
-        const SizedBox(height: 22),
+        PrimaryButton(
+          text: 'Entrar',
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
+            );
+          },
+        ),
+        const SizedBox(height: 18),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Ainda não tem conta?',
-              style: AuthTextStyles.body(
-                16,
-                color: AuthPalette.text.withValues(alpha: 0.72),
-              ),
+              'Não tem conta? ',
+              style: AppTextStyles.body(14, color: AppColors.text.withValues(alpha: 0.5)),
             ),
-            TextButton(
-              onPressed: _openRegister,
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                overlayColor: Colors.transparent,
-              ),
-              child: Text(
-                'Criar agora',
-                style: AuthTextStyles.body(16, color: AuthPalette.darkGreen),
-              ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  CupertinoPageRoute<void>(builder: (_) => const RegisterScreen()),
+                );
+              },
+              child: Text('Criar agora', style: AppTextStyles.body(14, color: AppColors.darkGreen)),
             ),
           ],
         ),
-        const SizedBox(height: 18),
       ],
     );
   }
