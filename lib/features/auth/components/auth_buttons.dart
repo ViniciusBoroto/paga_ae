@@ -20,6 +20,7 @@ class PrimaryButton extends StatelessWidget {
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
+
           borderRadius: BorderRadius.circular(999),
           boxShadow: [
             BoxShadow(
@@ -29,6 +30,7 @@ class PrimaryButton extends StatelessWidget {
             ),
           ],
         ),
+
         child: Text(
           text,
           textAlign: TextAlign.center,
@@ -52,15 +54,18 @@ class SecondaryButton extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 17),
+
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(999),
           border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.2)),
         ),
+
         child: Text(
           text,
           textAlign: TextAlign.center,
           style: AppTextStyles.button(17, color: AppColors.darkGreen),
+          
         ),
       ),
     );

@@ -18,7 +18,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final _pixController = TextEditingController();
   DateTime _dataSelecionada = DateTime.now();
 
-  // MARK: - Lifecycle
+  // Lifecycle
 
   @override
   void dispose() {
@@ -28,7 +28,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     super.dispose();
   }
 
-  // MARK: - Actions
+  // Actions
 
   void _escolherData() async {
     await showCupertinoModalPopup<void>(
@@ -60,6 +60,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
+
       body: SafeArea(
         child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -67,6 +68,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
             const SizedBox(height: 12),
             _header(),
             const SizedBox(height: 32),
@@ -77,8 +79,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             _titulo('Pagamento'),
             const SizedBox(height: 14),
             _cardPix(),
-            const SizedBox(height: 24),
-            _cardDica(),
             const SizedBox(height: 24),
             _botaoCriar(),
             const SizedBox(height: 32),
@@ -96,21 +96,26 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AuthBackButton(onTap: () => Navigator.of(context).pop()),
+
         const SizedBox(height: 20),
+
         Text('Criar evento', style: AppTextStyles.title(36)),
+
         const SizedBox(height: 6),
+
         Text(
-          'Preencha os dados e convide a galera.',
-          style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.55)),
+          'Preencha os dados do Evento', style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.55)),
         ),
       ],
     );
   }
 
+// card info
   Widget _cardInfo() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(24),
@@ -142,39 +147,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
       ),
+
       child: _campo(
         icone: CupertinoIcons.money_dollar_circle_fill,
         label: 'CHAVE PIX',
         placeholder: 'CPF, email ou telefone',
         controller: _pixController,
-      ),
-    );
-  }
-
-  Widget _cardDica() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.darkGreen.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Icon(CupertinoIcons.lightbulb_fill, size: 18, color: AppColors.darkGreen.withValues(alpha: 0.5)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Após criar, você poderá convidar pessoas e adicionar gastos.',
-              style: AppTextStyles.body(13, color: AppColors.text.withValues(alpha: 0.5)),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -196,6 +180,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
+
       child: Row(
         children: [
           Container(
@@ -207,7 +192,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             ),
             child: Icon(icone, size: 18, color: AppColors.darkGreen),
           ),
+
           const SizedBox(width: 14),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

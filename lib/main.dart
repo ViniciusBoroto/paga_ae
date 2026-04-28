@@ -1,10 +1,12 @@
 import 'package:cash_flow/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
 
+// Define pra onde o app deve ir quando for iniciado que seria a WelcomeScreen
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

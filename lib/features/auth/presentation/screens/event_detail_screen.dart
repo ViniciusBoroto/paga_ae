@@ -20,30 +20,46 @@ class EventDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12),
+
             _header(context),
+
             const SizedBox(height: 24),
+
             _cardResumo(),
+
             const SizedBox(height: 28),
+
             _titulo('Gastos'),
+
             const SizedBox(height: 14),
+
             _gastoCard('Carne e linguiça', 'R\$ 180,00'),
             _gastoCard('Bebidas', 'R\$ 120,00'),
             _gastoCard('Carvão e descartáveis', 'R\$ 45,00'),
             _gastoCard('Pão de alho', 'R\$ 30,00'),
             _gastoCard('Sobremesa', 'R\$ 75,00'),
+
             const SizedBox(height: 28),
+
             _titulo('Participantes'),
+
             const SizedBox(height: 14),
+
             _participanteCard('Kauã', 'R\$ 75,00', true),
-            _participanteCard('Zé', 'R\$ 75,00', true),
-            _participanteCard('Maria', 'R\$ 75,00', false),
-            _participanteCard('João', 'R\$ 75,00', false),
-            _participanteCard('Ana', 'R\$ 75,00', false),
+            _participanteCard('Vini', 'R\$ 75,00', true),
+            _participanteCard('Moura', 'R\$ 75,00', false),
+            _participanteCard('matheus', 'R\$ 75,00', false),
+            _participanteCard('luan', 'R\$ 75,00', false),
             _participanteCard('Pedro', 'R\$ 75,00', false),
+
             const SizedBox(height: 28),
+
             PrimaryButton(text: 'Adicionar gasto', onPressed: () {}),
+
             const SizedBox(height: 12),
+
             SecondaryButton(text: 'Finalizar evento', onPressed: () {}),
+
             const SizedBox(height: 32),
           ],
         ),
@@ -90,9 +106,13 @@ class EventDetailScreen extends StatelessWidget {
       child: Row(
         children: [
           _resumoItem('Total', 'R\$ 450,00'),
+
           _resumoDivisor(),
+
           _resumoItem('Por pessoa', 'R\$ 75,00'),
+
           _resumoDivisor(),
+          
           _resumoItem('Pessoas', '6'),
         ],
       ),
@@ -112,21 +132,23 @@ class EventDetailScreen extends StatelessWidget {
   }
 
   Widget _resumoDivisor() {
-    return Container(width: 1, height: 36, color: AppColors.darkGreen.withValues(alpha: 0.08));
+    return Container(padding: EdgeInsets.symmetric(horizontal: 12), width: 1, height: 36, color: AppColors.darkGreen.withValues(alpha: 0.08));
   }
 
-  // MARK: - Card de gasto
+  // Card de gasto
 
   Widget _gastoCard(String descricao, String valor) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
+
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.08)),
       ),
+
       child: Row(
         children: [
           Container(
@@ -138,15 +160,18 @@ class EventDetailScreen extends StatelessWidget {
             ),
             child: const Icon(CupertinoIcons.cart_fill, size: 16, color: AppColors.darkGreen),
           ),
+
           const SizedBox(width: 12),
+
           Expanded(child: Text(descricao, style: AppTextStyles.body(15))),
           Text(valor, style: AppTextStyles.title(16, color: AppColors.darkGreen)),
+
         ],
       ),
     );
   }
 
-  // MARK: - Card de participante
+  // car participante
 
   Widget _participanteCard(String nome, String valor, bool pagou) {
     return Container(
@@ -158,6 +183,7 @@ class EventDetailScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.08)),
       ),
+
       child: Row(
         children: [
           Container(
@@ -169,6 +195,7 @@ class EventDetailScreen extends StatelessWidget {
                   ? AppColors.green.withValues(alpha: 0.12)
                   : Colors.orange.withValues(alpha: 0.12),
             ),
+
             child: Center(
               child: Text(
                 nome[0],
@@ -176,7 +203,9 @@ class EventDetailScreen extends StatelessWidget {
               ),
             ),
           ),
+
           const SizedBox(width: 12),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,6 +219,7 @@ class EventDetailScreen extends StatelessWidget {
               ],
             ),
           ),
+          
           Text(valor, style: AppTextStyles.title(16, color: AppColors.darkGreen)),
           if (pagou) ...[
             const SizedBox(width: 8),
@@ -200,7 +230,7 @@ class EventDetailScreen extends StatelessWidget {
     );
   }
 
-  // MARK: - Pequenos widgets
+  // widgets auxiliares
 
   Widget _titulo(String texto) {
     return Text(

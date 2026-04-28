@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
-  // MARK: - Body
+  // Body
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,6 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  // MARK: - Sections
-
   Widget _title() {
     return Text('PagaAE', style: AppTextStyles.title(58));
   }
@@ -47,14 +45,15 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
+
   Widget _features() {
     return Column(
       children: [
-        _featureRow(AppIcons.group, 'Convide a galera para cada evento'),
+        _featureRow(AppIcons.group, 'Convide a galera para cada evento.'),
         const SizedBox(height: 18),
-        _featureRow(AppIcons.list, 'Lance gastos e veja total por pessoa'),
+        _featureRow(AppIcons.list, 'Lance gastos e veja total por pessoa.'),
         const SizedBox(height: 18),
-        _featureRow(AppIcons.check, 'Marque quem já pagou sem dor de cabeça'),
+        _featureRow(AppIcons.check, 'Marque quem já pagou.'),
       ],
     );
   }

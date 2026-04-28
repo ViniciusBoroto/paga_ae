@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
       floatingActionButton: _botaoFlutuante(),
+
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -26,12 +27,20 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               const SizedBox(height: 16),
+
               _header(),
+
               const SizedBox(height: 28),
+
               _totalCard(),
+
               const SizedBox(height: 28),
+
+              
               _titulo('Eventos'),
+
             _eventoCard(
               nome: 'Churrasco do Zé',
               data: '25 jul',
@@ -39,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
               total: 'R\$ 450,00',
               status: 'Ativo',
             ),
+
             const SizedBox(height: 12),
             _eventoCard(
               nome: 'Aniversário da Susan',
@@ -47,20 +57,25 @@ class _HomeScreenState extends State<HomeScreen> {
               total: 'R\$ 1.000,00',
               status: 'Finalizado',
             ),
+
             const SizedBox(height: 28),
+
             _titulo('Pendências'),
+
             const SizedBox(height: 14),
             _pendenciaCard(
               evento: 'Churrasco do Zé',
               valor: 'R\$ 75,00',
               prazo: 'Vence em 3 dias',
             ),
+
             const SizedBox(height: 12),
             _pendenciaCard(
               evento: 'Aniversário da Susan',
               valor: 'R\$ 100,00',
               prazo: 'Vence em 5 dias',
             ),
+
             const SizedBox(height: 100),
           ],
         ),
@@ -69,11 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Header
+  // Header
 
   Widget _header() {
     return Row(
       children: [
+
         Container(
           width: 46,
           height: 46,
@@ -84,23 +100,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           child: Center(child: Text('K', style: AppTextStyles.title(20))),
         ),
+
         const SizedBox(width: 14),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Olá, Kauã', style: AppTextStyles.body(18)),
               const SizedBox(height: 2),
-              Text(
-                '2 pendências abertas',
-                style: AppTextStyles.body(13, color: AppColors.text.withValues(alpha: 0.45)),
-              ),
             ],
           ),
         ),
+
         GestureDetector(
           onTap: () {},
           child: Container(
+
             width: 42,
             height: 42,
             decoration: BoxDecoration(
@@ -115,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Card do total
+  // Card do total
 
   Widget _totalCard() {
     return Container(
@@ -126,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -133,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 4),
           Text('R\$ 175,00', style: AppTextStyles.title(38, color: AppColors.darkGreen)),
           const SizedBox(height: 16),
+
           Row(
             children: [
               _indicador(CupertinoIcons.flame_fill, '2 eventos'),
@@ -145,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Card de evento
+  // Card de evento
 
   Widget _eventoCard({
     required String nome,
@@ -154,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String total,
     required String status,
   }) {
+
     final ativo = status == 'Ativo';
 
     return GestureDetector(
@@ -162,6 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
           CupertinoPageRoute<void>(builder: (_) => const EventDetailScreen()),
         );
       },
+
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
@@ -170,10 +190,12 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
         ),
+
         child: Column(
           children: [
             Row(
               children: [
+                //icon
                 Container(
                   width: 40,
                   height: 40,
@@ -183,7 +205,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: const Icon(CupertinoIcons.flame_fill, size: 18, color: AppColors.darkGreen),
                 ),
+
                 const SizedBox(width: 12),
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,16 +221,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(total, style: AppTextStyles.title(18, color: AppColors.darkGreen)),
               ],
             ),
+
             const SizedBox(height: 14),
+
             Container(height: 1, color: AppColors.darkGreen.withValues(alpha: 0.06)),
+
             const SizedBox(height: 12),
+
             Row(
               children: [
                 _info(CupertinoIcons.calendar, data),
+
                 const SizedBox(width: 14),
+
                 _info(CupertinoIcons.person_2_fill, '$pessoas pessoas'),
+
                 const Spacer(),
+
                 Icon(CupertinoIcons.chevron_right, size: 15, color: AppColors.text.withValues(alpha: 0.25)),
+
               ],
             ),
           ],
@@ -227,11 +260,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(18),
+        
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
         ),
+
         child: Row(
           children: [
             Container(
@@ -243,22 +278,29 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Icon(CupertinoIcons.exclamationmark_circle_fill, size: 18, color: Colors.orange.shade700),
             ),
+
             const SizedBox(width: 14),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Text(evento, style: AppTextStyles.body(16)),
                   const SizedBox(height: 2),
+                  
                   Text(prazo, style: AppTextStyles.body(12, color: Colors.orange.shade700)),
                 ],
               ),
             ),
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(valor, style: AppTextStyles.title(18, color: AppColors.darkGreen)),
+                
                 const SizedBox(height: 6),
+
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
                   decoration: BoxDecoration(
@@ -275,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Botão flutuante
+  // botao criar evento
 
   Widget _botaoFlutuante() {
     return GestureDetector(
@@ -284,8 +326,10 @@ class _HomeScreenState extends State<HomeScreen> {
           CupertinoPageRoute<void>(builder: (_) => const CreateEventScreen()),
         );
       },
+
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
           gradient: const LinearGradient(
@@ -307,7 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // MARK: - Pequenos widgets
+  // widgets axiliares
 
   Widget _titulo(String texto) {
     return Text(
@@ -319,10 +363,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _indicador(IconData icone, String texto) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+
       decoration: BoxDecoration(
         color: AppColors.darkGreen.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(999),
       ),
+
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -337,10 +383,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _badgeStatus(String texto, bool ativo) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+
       decoration: BoxDecoration(
         color: ativo ? AppColors.green.withValues(alpha: 0.15) : AppColors.text.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
       ),
+
       child: Text(
         texto,
         style: AppTextStyles.body(11, color: ativo ? AppColors.darkGreen : AppColors.text.withValues(alpha: 0.5)),
@@ -353,7 +401,9 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icone, size: 13, color: AppColors.text.withValues(alpha: 0.4)),
+
         const SizedBox(width: 5),
+
         Text(texto, style: AppTextStyles.body(13, color: AppColors.text.withValues(alpha: 0.45))),
       ],
     );
