@@ -17,7 +17,7 @@ class WelcomeScreen extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(flex: 2),
             _title(),
@@ -35,12 +35,17 @@ class WelcomeScreen extends StatelessWidget {
   }
 
   Widget _title() {
-    return Text('PagaAE', style: AppTextStyles.title(58));
+    return Text(
+      'PagaAE',
+      textAlign: TextAlign.center,
+      style: AppTextStyles.title(58),
+    );
   }
 
   Widget _subtitle() {
     return Text(
       'Evento criado. Conta dividida.\nPix em dia.',
+      textAlign: TextAlign.center,
       style: AppTextStyles.body(18, color: AppColors.text.withValues(alpha: 0.65)),
     );
   }
@@ -48,6 +53,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _features() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _featureRow(AppIcons.group, 'Convide a galera para cada evento.'),
         const SizedBox(height: 18),
@@ -60,6 +66,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget _featureRow(IconData icon, String text) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           width: 36,
@@ -72,9 +79,10 @@ class WelcomeScreen extends StatelessWidget {
           child: Icon(icon, size: 15, color: AppColors.darkGreen),
         ),
         const SizedBox(width: 14),
-        Expanded(
+        Flexible(
           child: Text(
             text,
+            textAlign: TextAlign.center,
             style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.65)),
           ),
         ),

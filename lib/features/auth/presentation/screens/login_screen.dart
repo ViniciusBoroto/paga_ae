@@ -16,12 +16,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // MARK: - Properties
+  // Properties
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // MARK: - Lifecycle
+  // Lifecycle
 
   @override
   void dispose() {
@@ -75,7 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
         AuthBackButton(onTap: () => Navigator.of(context).pop()),
         const SizedBox(height: 20),
         Text('Entrar', style: AppTextStyles.title(36)),
+
         const SizedBox(height: 6),
+        
         Text(
           'Acesse seus eventos e pagamentos do grupo.',
           style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.55)),
