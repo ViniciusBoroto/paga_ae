@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // Properties
 
+  final _formKey = GlobalKey<FormState>(); //globalKey para validator()
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -30,7 +31,30 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-// Body
+  void _loginFormulario() {
+    final formularioValido = _formKey.currentState?.validate() ?? false;
+
+    if (!formularioValido) {
+      return;
+    }
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Login realizado com sucesso!')),
+    );
+
+    Navigator.of(context).pushReplacement(
+      CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
+    );
+  }
+
+  // Body
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
         Text('Entrar', style: AppTextStyles.title(36)),
 
         const SizedBox(height: 6),
-        
+
         Text(
           'Acesse seus eventos e pagamentos do grupo.',
-          style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.55)),
+          style: AppTextStyles.body(
+            15,
+            color: AppColors.text.withValues(alpha: 0.55),
+          ),
         ),
       ],
     );
@@ -94,24 +121,27 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
       ),
-      child: Column(
-        children: [
-          AuthInput(
-            label: 'Email',
-            placeholder: 'voce@email.com',
-            icon: AppIcons.email,
-            keyboardType: TextInputType.emailAddress,
-            controller: _emailController,
-          ),
-          const SizedBox(height: 22),
-          AuthInput(
-            label: 'Senha',
-            placeholder: 'Sua senha',
-            icon: AppIcons.password,
-            obscureText: true,
-            controller: _passwordController,
-          ),
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            AuthInput(
+              label: 'Email',
+              placeholder: 'voce@email.com',
+              icon: AppIcons.email,
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
+            ),
+            const SizedBox(height: 22),
+            AuthInput(
+              label: 'Senha',
+              placeholder: 'Sua senha',
+              icon: AppIcons.password,
+              obscureText: true,
+              controller: _passwordController,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,7 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () {},
       child: Text(
         'Esqueci minha senha',
-        style: AppTextStyles.body(13, color: AppColors.darkGreen.withValues(alpha: 0.65)),
+        style: AppTextStyles.body(
+          13,
+          color: AppColors.darkGreen.withValues(alpha: 0.65),
+        ),
       ),
     );
   }
@@ -131,11 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         PrimaryButton(
           text: 'Entrar',
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
-            );
-          },
+          onPressed: _loginFormulario,
         ),
         const SizedBox(height: 18),
         Row(
@@ -143,15 +172,23 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Text(
               'Não tem conta? ',
-              style: AppTextStyles.body(14, color: AppColors.text.withValues(alpha: 0.5)),
+              style: AppTextStyles.body(
+                14,
+                color: AppColors.text.withValues(alpha: 0.5),
+              ),
             ),
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pushReplacement(
-                  CupertinoPageRoute<void>(builder: (_) => const RegisterScreen()),
+                  CupertinoPageRoute<void>(
+                    builder: (_) => const RegisterScreen(),
+                  ),
                 );
               },
-              child: Text('Criar agora', style: AppTextStyles.body(14, color: AppColors.darkGreen)),
+              child: Text(
+                'Criar agora',
+                style: AppTextStyles.body(14, color: AppColors.darkGreen),
+              ),
             ),
           ],
         ),

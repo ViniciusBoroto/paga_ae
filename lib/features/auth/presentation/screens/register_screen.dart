@@ -16,6 +16,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   // MARK: - Properties
 
+  final _formKey = GlobalKey<FormState>(); //globalKey para validator()
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -30,7 +31,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // MARK: - Body
+  void _registerFormulario() {
+    final formularioValido = _formKey.currentState?.validate() ?? false;
+
+    if (!formularioValido) {
+      return;
+    }
+
+    final nome = _nameController.text;
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (nome.isEmpty || email.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Registro bem-sucedido! Bem-vindo, $nome!')),
+    );
+
+    Navigator.of(context).pushReplacement(
+      CupertinoPageRoute<void>(builder: (_) => const LoginScreen()),
+    );
+  }
+
+  // Body
 
   @override
   Widget build(BuildContext context) {
@@ -90,32 +115,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.1)),
       ),
-      child: Column(
-        children: [
-          AuthInput(
-            label: 'Nome',
-            placeholder: 'Seu nome completo',
-            icon: AppIcons.person,
-            keyboardType: TextInputType.name,
-            controller: _nameController,
-          ),
-          const SizedBox(height: 22),
-          AuthInput(
-            label: 'Email',
-            placeholder: 'voce@email.com',
-            icon: AppIcons.email,
-            keyboardType: TextInputType.emailAddress,
-            controller: _emailController,
-          ),
-          const SizedBox(height: 22),
-          AuthInput(
-            label: 'Senha',
-            placeholder: 'Crie uma senha segura',
-            icon: AppIcons.password,
-            obscureText: true,
-            controller: _passwordController,
-          ),
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            AuthInput(
+              label: 'Nome',
+              placeholder: 'Seu nome completo',
+              icon: AppIcons.person,
+              keyboardType: TextInputType.name,
+              controller: _nameController,
+            ),
+            const SizedBox(height: 22),
+            AuthInput(
+              label: 'Email',
+              placeholder: 'voce@email.com',
+              icon: AppIcons.email,
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
+            ),
+            const SizedBox(height: 22),
+            AuthInput(
+              label: 'Senha',
+              placeholder: 'Crie uma senha segura',
+              icon: AppIcons.password,
+              obscureText: true,
+              controller: _passwordController,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -123,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _actions() {
     return Column(
       children: [
-        PrimaryButton(text: 'Criar conta', onPressed: () {}),
+        PrimaryButton(text: 'Criar conta', onPressed: _registerFormulario),
         const SizedBox(height: 12),
         Text(
           'Ao continuar, você aceita os termos e a política de privacidade.',

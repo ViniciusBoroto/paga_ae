@@ -34,7 +34,7 @@ class AuthInput extends StatelessWidget {
             Icon(icon, size: 16, color: AppColors.darkGreen.withValues(alpha: 0.6)),
             const SizedBox(width: 10),
             Expanded(
-              child: TextField(
+              child: TextFormField(
                 controller: controller,
                 keyboardType: keyboardType,
                 obscureText: obscureText,
@@ -49,6 +49,34 @@ class AuthInput extends StatelessWidget {
                   hintText: placeholder,
                   hintStyle: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.3)),
                 ),
+                validator: (valor) {
+                  final texto = valor?.trim() ?? '';
+
+                  if (label == 'Email') {
+                    if (texto.isEmpty) {
+                      return 'Por favor, insira um email';
+                    }
+
+                    final regexEmail = RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$');
+                    if (!regexEmail.hasMatch(texto)) {
+                      return 'Por favor, insira um email válido';
+                    }
+                  }
+
+                  if (label == 'Senha') {
+                    if (texto.isEmpty) {
+                      return 'Por favor, insira uma senha';
+                    }
+                  }
+
+                  if (label == 'Nome') {
+                    if (texto.isEmpty) {
+                      return 'Por favor, insira um nome';
+                    }
+                  }
+
+                  return null;
+                }
               ),
             ),
           ],

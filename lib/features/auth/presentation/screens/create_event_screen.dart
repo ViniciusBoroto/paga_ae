@@ -1,6 +1,7 @@
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class CreateEventScreen extends StatefulWidget {
@@ -11,8 +12,9 @@ class CreateEventScreen extends StatefulWidget {
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  // MARK: - Properties
+  // Properties
 
+  final _formKey = GlobalKey<FormState>(); //globalKey para validator()
   final _nomeController = TextEditingController();
   final _localController = TextEditingController();
   final _pixController = TextEditingController();
@@ -26,6 +28,31 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _localController.dispose();
     _pixController.dispose();
     super.dispose();
+  }
+
+   void _createEventeFormulario() {
+    final formularioValido = _formKey.currentState?.validate() ?? false;
+
+    if (!formularioValido) {
+      return;
+    }
+
+    final nome = _nomeController.text;
+    final local = _localController.text;
+    final pix = _pixController.text;
+
+    if (nome.isEmpty || local.isEmpty || pix.isEmpty) {
+      return;
+    }
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Evento criado com sucesso!')),
+    );
+
+     Navigator.of(context).pushReplacement(
+      CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
+    );
+
   }
 
   // Actions
@@ -62,28 +89,30 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            
-            const SizedBox(height: 12),
-            _header(),
-            const SizedBox(height: 32),
-            _titulo('Informações'),
-            const SizedBox(height: 14),
-            _cardInfo(),
-            const SizedBox(height: 24),
-            _titulo('Pagamento'),
-            const SizedBox(height: 14),
-            _cardPix(),
-            const SizedBox(height: 24),
-            _botaoCriar(),
-            const SizedBox(height: 32),
-          ],
-        ),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 12),
+                _header(),
+                const SizedBox(height: 32),
+                _titulo('Informações'),
+                const SizedBox(height: 14),
+                _cardInfo(),
+                const SizedBox(height: 24),
+                _titulo('Pagamento'),
+                const SizedBox(height: 14),
+                _cardPix(),
+                const SizedBox(height: 24),
+                _botaoCriar(),
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -166,7 +195,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _botaoCriar() {
     return PrimaryButton(
       text: 'Criar evento',
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: _createEventeFormulario,
     );
   }
 
@@ -180,7 +209,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
-
       child: Row(
         children: [
           Container(
@@ -201,7 +229,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               children: [
                 Text(label, style: AppTextStyles.label(11, color: AppColors.text.withValues(alpha: 0.4))),
                 const SizedBox(height: 4),
-                TextField(
+                TextFormField(
                   controller: controller,
                   textCapitalization: TextCapitalization.sentences,
                   cursorColor: AppColors.darkGreen,
@@ -213,6 +241,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     hintText: placeholder,
                     hintStyle: AppTextStyles.body(17, color: AppColors.text.withValues(alpha: 0.3)),
                   ),
+                  validator: (valor){
+                    if(label == 'CHAVE PIX' && valor != null && valor.isNotEmpty){
+                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                      final telefoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
+                      final cpfRegex = RegExp(r'^\d{3}\.\d{3}\.\d{3}-\d{2}$');
+
+                      if(!emailRegex.hasMatch(valor) && !telefoneRegex.hasMatch(valor) && !cpfRegex.hasMatch(valor)){
+                        return 'Digite um CPF, email ou telefone válido';
+                      }
+                    }
+                    if(label == 'NOME DO EVENTO' && valor != null && valor.isEmpty){
+                      return 'O nome do evento é obrigatório';
+                    }
+                    if(label == 'LOCAL' && valor != null && valor.isEmpty){
+                      return 'O local do evento é obrigatório';
+                    }
+
+                    return null;
+                  },
                 ),
               ],
             ),
