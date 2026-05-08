@@ -5,6 +5,7 @@ import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -95,16 +96,12 @@ class WelcomeScreen extends StatelessWidget {
       children: [
         PrimaryButton(
           text: 'Entrar',
-          onPressed: () => Navigator.of(context).push(
-            CupertinoPageRoute<void>(builder: (_) => const LoginScreen()),
-          ),
+          onPressed: () => context.push('/login'),
         ),
         const SizedBox(height: 12),
         SecondaryButton(
           text: 'Criar conta',
-          onPressed: () => Navigator.of(context).push(
-            CupertinoPageRoute<void>(builder: (_) => const RegisterScreen()),
-          ),
+          onPressed: () => context.push('/register'),
         ),
       ],
     );

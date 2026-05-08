@@ -5,6 +5,7 @@ import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -50,9 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       SnackBar(content: Text('Registro bem-sucedido! Bem-vindo, $nome!')),
     );
 
-    Navigator.of(context).pushReplacement(
-      CupertinoPageRoute<void>(builder: (_) => const LoginScreen()),
-    );
+    context.go('/login');
   }
 
   // Body

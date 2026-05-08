@@ -1,6 +1,79 @@
 import 'package:cash_flow/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
+import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
+import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
+import 'package:cash_flow/features/auth/presentation/screens/create_event_screen.dart';
+import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
+import 'package:cash_flow/features/auth/presentation/screens/settings_screen.dart';
 
+class ServicoAuth extends ChangeNotifier {
+  bool _autenticado = false;
+  bool get autenticado => _autenticado;
+
+  void login() {
+    _autenticado = true;
+    notifyListeners();
+  }
+
+  void logout() {
+    _autenticado = false;
+    notifyListeners();
+  }
+}
+
+final servicoAuth = ServicoAuth();
+
+final GoRouter router = GoRouter(
+  initialLocation: '/',
+  refreshListenable: servicoAuth,
+
+  redirect: (BuildContext context, GoRouterState state) {
+    final autenticado = servicoAuth.autenticado;
+    final rotaAtual = state.matchedLocation;
+    final rotasPublicas = {'/', '/login', '/register'};
+    final estaEmRotaPublica = rotasPublicas.contains(rotaAtual);
+
+    if (!autenticado && !estaEmRotaPublica) {
+      return '/login';
+    }
+
+    if (autenticado && estaEmRotaPublica) {
+      return '/home';
+    }
+
+    return null;
+  },
+
+  routes: [
+    GoRoute(path: '/', builder: (context, state) => const WelcomeScreen()),
+
+    GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+
+    GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
+
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
+    ),
+
+    GoRoute(
+      path: '/create_event',
+      builder: (context, state) => const CreateEventScreen(),
+    ),
+
+    GoRoute(
+      path: '/event_detail',
+      builder: (context, state) => const EventDetailScreen(),
+    ),
+  ],
+);
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +85,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'PagaAE',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -21,7 +94,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      routerConfig: router,
     );
   }
 }

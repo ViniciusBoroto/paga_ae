@@ -3,6 +3,7 @@ import 'package:cash_flow/features/auth/presentation/screens/create_event_screen
 import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -90,15 +91,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
 
-        Container(
-          width: 46,
-          height: 46,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white.withValues(alpha: 0.7),
-            border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.12)),
+        GestureDetector(
+          onTap: () => context.push('/settings'),
+          child: Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.7),
+              border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.12)),
+            ),
+            child: Center(child: Text('K', style: AppTextStyles.title(20))),
           ),
-          child: Center(child: Text('K', style: AppTextStyles.title(20))),
         ),
 
         const SizedBox(width: 14),

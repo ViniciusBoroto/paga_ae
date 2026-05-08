@@ -1,8 +1,10 @@
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:cash_flow/main.dart';
+
 
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
@@ -45,14 +47,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       return;
     }
     
-    ScaffoldMessenger.of(context).showSnackBar(
+   ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Evento criado com sucesso!')),
     );
 
-     Navigator.of(context).pushReplacement(
-      CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
-    );
+   servicoAuth.login();
 
+   context.go('/home');
   }
 
   // Actions

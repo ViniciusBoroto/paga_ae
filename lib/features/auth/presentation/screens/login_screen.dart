@@ -2,11 +2,11 @@ import 'package:cash_flow/features/auth/components/auth_background.dart';
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_input.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
-import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:go_ruter/go_router.dart';
+import 'package:cash_flow/main.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,9 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
       const SnackBar(content: Text('Login realizado com sucesso!')),
     );
 
-    Navigator.of(context).pushReplacement(
-      CupertinoPageRoute<void>(builder: (_) => const HomeScreen()),
-    );
+    servicoAuth.login();
+    context.go('/home');
   }
 
   // Body
