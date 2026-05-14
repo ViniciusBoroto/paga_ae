@@ -21,6 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final eventService = context.watch<EventService>();
     final eventos = eventService.events;
+    final pendencies = eventService.pendencies;
+    final totalOwed = eventService.totalOwed;
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 28),
 
-              _totalCard(),
+              _totalCard(totalOwed, eventos.length, pendencies.length),
 
               const SizedBox(height: 28),
 
@@ -57,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ...eventos.map((e) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: _eventoCard(
+                    eventId: e.id,
                     nome: e.title,
                     data: '${e.date.day.toString().padLeft(2, '0')}/${e.date.month.toString().padLeft(2, '0')}',
                     pessoas: e.participants.length,
@@ -69,19 +72,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _titulo('Pendências'),
 
-            const SizedBox(height: 14),
-            _pendenciaCard(
-              evento: 'Churrasco do Zé',
-              valor: 'R\$ 75,00',
-              prazo: 'Vence em 3 dias',
-            ),
-
-            const SizedBox(height: 12),
-            _pendenciaCard(
-              evento: 'Aniversário da Susan',
-              valor: 'R\$ 100,00',
-              prazo: 'Vence em 5 dias',
-            ),
+            if (pendencies.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text('Nenhuma pendência!', style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.5))),
+              )
+            else
+              ...pendencies.map((charge) {
+                final evento = eventService.getEventById(charge.eventId);
+                final nomeEvento = evento?.title ?? 'Evento deletado';
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _pendenciaCard(
+                    evento: nomeEvento,
+                    valor: 'R\$ ${charge.amount.toStringAsFixed(2).replaceAll('.', ',')}',
+                    prazo: 'Vence em breve',
+                    onPay: () => context.read<EventService>().payCharge(charge.id),
+                  ),
+                );
+              }),
 
             const SizedBox(height: 100),
           ],
@@ -143,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Card do total
 
-  Widget _totalCard() {
+  Widget _totalCard(double total, int numEventos, int numPendencias) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -158,14 +167,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text('Você deve', style: AppTextStyles.body(14, color: AppColors.text.withValues(alpha: 0.45))),
           const SizedBox(height: 4),
-          Text('R\$ 175,00', style: AppTextStyles.title(38, color: AppColors.darkGreen)),
+          Text('R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}', style: AppTextStyles.title(38, color: AppColors.darkGreen)),
           const SizedBox(height: 16),
 
           Row(
             children: [
-              _indicador(CupertinoIcons.flame_fill, '2 eventos'),
+              _indicador(CupertinoIcons.flame_fill, '$numEventos eventos'),
               const SizedBox(width: 10),
-              _indicador(CupertinoIcons.clock_fill, '2 pendências'),
+              _indicador(CupertinoIcons.clock_fill, '$numPendencias pendências'),
             ],
           ),
         ],
@@ -176,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Card de evento
 
   Widget _eventoCard({
+    required int eventId,
     required String nome,
     required String data,
     required int pessoas,
@@ -229,6 +239,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(total, style: AppTextStyles.title(18, color: AppColors.darkGreen)),
+                const SizedBox(width: 8),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: const Icon(CupertinoIcons.trash, size: 20, color: Colors.redAccent),
+                  onPressed: () {
+                    context.read<EventService>().deleteEvent(eventId);
+                  },
+                ),
               ],
             ),
 
@@ -264,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required String evento,
     required String valor,
     required String prazo,
+    required VoidCallback onPay,
   }) {
     return GestureDetector(
       onTap: () {},
@@ -311,13 +331,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 
                 const SizedBox(height: 6),
 
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [AppColors.green, AppColors.darkGreen]),
-                    borderRadius: BorderRadius.circular(999),
+                GestureDetector(
+                  onTap: onPay,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [AppColors.green, AppColors.darkGreen]),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text('Pagar', style: AppTextStyles.button(13)),
                   ),
-                  child: Text('Pagar', style: AppTextStyles.button(13)),
                 ),
               ],
             ),
