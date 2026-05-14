@@ -47,10 +47,12 @@ class WelcomeScreen extends StatelessWidget {
     return Text(
       'Evento criado. Conta dividida.\nPix em dia.',
       textAlign: TextAlign.center,
-      style: AppTextStyles.body(18, color: AppColors.text.withValues(alpha: 0.65)),
+      style: AppTextStyles.body(
+        18,
+        color: AppColors.text.withValues(alpha: 0.65),
+      ),
     );
   }
-
 
   Widget _features() {
     return Column(
@@ -75,7 +77,9 @@ class WelcomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white.withValues(alpha: 0.7),
-            border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.08)),
+            border: Border.all(
+              color: AppColors.darkGreen.withValues(alpha: 0.08),
+            ),
           ),
           child: Icon(icon, size: 15, color: AppColors.darkGreen),
         ),
@@ -84,7 +88,10 @@ class WelcomeScreen extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.65)),
+            style: AppTextStyles.body(
+              15,
+              color: AppColors.text.withValues(alpha: 0.65),
+            ),
           ),
         ),
       ],
@@ -94,10 +101,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget _buttons(BuildContext context) {
     return Column(
       children: [
-        PrimaryButton(
-          text: 'Entrar',
-          onPressed: () => context.push('/login'),
-        ),
+        PrimaryButton(text: 'Entrar', onPressed: () => context.push('/login')),
         const SizedBox(height: 12),
         SecondaryButton(
           text: 'Criar conta',

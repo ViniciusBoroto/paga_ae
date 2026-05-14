@@ -3,7 +3,8 @@ import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cash_flow/main.dart';
+import 'package:provider/provider.dart';
+import 'package:cash_flow/features/event/services/event_service.dart';
 
 
 class CreateEventScreen extends StatefulWidget {
@@ -51,7 +52,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       const SnackBar(content: Text('Evento criado com sucesso!')),
     );
 
-   servicoAuth.login();
+   context.read<EventService>().createEvent(
+     title: nome,
+     local: local,
+     pixKey: pix,
+     date: _dataSelecionada,
+   );
 
    context.go('/home');
   }

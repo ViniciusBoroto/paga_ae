@@ -1,6 +1,7 @@
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
-import 'package:cash_flow/main.dart';
+import 'package:provider/provider.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   void _logout(BuildContext context) {
-    servicoAuth.logout();
+    context.read<ServicoAuth>().logout();
     context.go('/login');
   }
 

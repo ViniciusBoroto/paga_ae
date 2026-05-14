@@ -4,6 +4,8 @@ import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:cash_flow/features/event/services/event_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +19,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final eventService = context.watch<EventService>();
+    final eventos = eventService.events;
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 247, 246, 1),
       floatingActionButton: _botaoFlutuante(),
@@ -41,25 +46,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
               
               _titulo('Eventos'),
+              const SizedBox(height: 14),
 
-            _eventoCard(
-              nome: 'Churrasco do Zé',
-              data: '25 jul',
-              pessoas: 6,
-              total: 'R\$ 450,00',
-              status: 'Ativo',
-            ),
+              if (eventos.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text('Nenhum evento criado ainda.', style: AppTextStyles.body(15, color: AppColors.text.withValues(alpha: 0.5))),
+                )
+              else
+                ...eventos.map((e) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _eventoCard(
+                    nome: e.title,
+                    data: '${e.date.day.toString().padLeft(2, '0')}/${e.date.month.toString().padLeft(2, '0')}',
+                    pessoas: e.participants.length,
+                    total: 'R\$ 0,00',
+                    status: e.status.name == 'upcoming' ? 'Ativo' : e.status.name,
+                  ),
+                )),
 
-            const SizedBox(height: 12),
-            _eventoCard(
-              nome: 'Aniversário da Susan',
-              data: '20 abr',
-              pessoas: 30,
-              total: 'R\$ 1.000,00',
-              status: 'Finalizado',
-            ),
-
-            const SizedBox(height: 28),
+            const SizedBox(height: 16),
 
             _titulo('Pendências'),
 

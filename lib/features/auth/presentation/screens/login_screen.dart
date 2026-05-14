@@ -5,7 +5,8 @@ import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cash_flow/main.dart';
+import 'package:provider/provider.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       const SnackBar(content: Text('Login realizado com sucesso!')),
     );
 
-    servicoAuth.login();
+    context.read<ServicoAuth>().login();
     context.go('/home');
   }
 
@@ -161,10 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _actions() {
     return Column(
       children: [
-        PrimaryButton(
-          text: 'Entrar',
-          onPressed: _loginFormulario,
-        ),
+        PrimaryButton(text: 'Entrar', onPressed: _loginFormulario),
         const SizedBox(height: 18),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

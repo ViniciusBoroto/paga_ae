@@ -7,30 +7,17 @@ import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/create_event_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/settings_screen.dart';
-
-class ServicoAuth extends ChangeNotifier {
-  bool _autenticado = false;
-  bool get autenticado => _autenticado;
-
-  void login() {
-    _autenticado = true;
-    notifyListeners();
-  }
-
-  void logout() {
-    _autenticado = false;
-    notifyListeners();
-  }
-}
-
-final servicoAuth = ServicoAuth();
+import 'package:provider/provider.dart';
+import 'package:cash_flow/core/di/injection.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
+import 'package:cash_flow/features/event/services/event_service.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
-  refreshListenable: servicoAuth,
+  refreshListenable: getIt<ServicoAuth>(),
 
   redirect: (BuildContext context, GoRouterState state) {
-    final autenticado = servicoAuth.autenticado;
+    final autenticado = getIt<ServicoAuth>().autenticado;
     final rotaAtual = state.matchedLocation;
     final rotasPublicas = {'/', '/login', '/register'};
     final estaEmRotaPublica = rotasPublicas.contains(rotaAtual);
@@ -76,7 +63,16 @@ final GoRouter router = GoRouter(
 );
 
 void main() {
-  runApp(const MyApp());
+  setupDependencies();
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: getIt<ServicoAuth>()),
+        ChangeNotifierProvider.value(value: getIt<EventService>()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 // Define pra onde o app deve ir quando for iniciado que seria a WelcomeScreen
