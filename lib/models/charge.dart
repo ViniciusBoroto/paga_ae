@@ -47,6 +47,36 @@ class Charge {
     };
   }
 
+  factory Charge.fromMap(Map<String, dynamic> map) {
+    return Charge(
+      id: (map['id'] as num).toInt(),
+      amount: (map['valor'] as num).toDouble(),
+      fromUserId: (map['de_usuario_id'] as num).toInt(),
+      toUserId: (map['para_usuario_id'] as num).toInt(),
+      eventId: (map['evento_id'] as num).toInt(),
+      createdAt:
+          map['criado_em'] != null
+              ? DateTime.parse(map['criado_em'] as String)
+              : null,
+      paidAt:
+          map['pago_em'] != null
+              ? DateTime.parse(map['pago_em'] as String)
+              : null,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'valor': amount,
+      'de_usuario_id': fromUserId,
+      'para_usuario_id': toUserId,
+      'evento_id': eventId,
+      'criado_em': createdAt?.toIso8601String(),
+      'pago_em': paidAt?.toIso8601String(),
+    };
+  }
+
   Charge copyWith({
     int? id,
     double? amount,

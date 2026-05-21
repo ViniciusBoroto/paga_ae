@@ -44,6 +44,33 @@ class Invite {
     };
   }
 
+  factory Invite.fromMap(Map<String, dynamic> map) {
+    return Invite(
+      id: (map['id'] as num).toInt(),
+      eventId: (map['evento_id'] as num).toInt(),
+      creatorId: (map['criador_id'] as num).toInt(),
+      inviteeId: (map['convidado_id'] as num).toInt(),
+      status: InviteStatus.values.firstWhere(
+        (s) => s.name == map['status'],
+      ),
+      createdAt:
+          map['criado_em'] != null
+              ? DateTime.parse(map['criado_em'] as String)
+              : null,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'evento_id': eventId,
+      'criador_id': creatorId,
+      'convidado_id': inviteeId,
+      'status': status.name,
+      'criado_em': createdAt?.toIso8601String(),
+    };
+  }
+
   Invite copyWith({
     int? id,
     int? eventId,

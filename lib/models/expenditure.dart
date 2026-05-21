@@ -29,6 +29,24 @@ class Expenditure {
     };
   }
 
+  factory Expenditure.fromMap(Map<String, dynamic> map) {
+    return Expenditure(
+      id: (map['id'] as num).toInt(),
+      description: map['descricao'] as String,
+      amount: (map['valor'] as num).toDouble(),
+      eventId: (map['evento_id'] as num).toInt(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'descricao': description,
+      'valor': amount,
+      'evento_id': eventId,
+    };
+  }
+
   Expenditure copyWith({
     int? id,
     String? description,

@@ -17,6 +17,18 @@ class User {
     return {'id': id, 'name': name, 'email': email};
   }
 
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: (map['id'] as num).toInt(),
+      name: map['nome'] as String,
+      email: map['email'] as String,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'nome': name, 'email': email};
+  }
+
   User copyWith({int? id, String? name, String? email}) {
     return User(
       id: id ?? this.id,

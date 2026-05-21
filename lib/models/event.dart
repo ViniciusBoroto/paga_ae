@@ -75,6 +75,42 @@ class Event {
     };
   }
 
+  factory Event.fromMap(Map<String, dynamic> map) {
+    return Event(
+      id: (map['id'] as num).toInt(),
+      title: map['titulo'] as String,
+      date: DateTime.parse(map['data'] as String),
+      status: EventStatus.values.firstWhere(
+        (s) => s.name == map['status'],
+      ),
+      participants: const [],
+      createdAt:
+          map['criado_em'] != null
+              ? DateTime.parse(map['criado_em'] as String)
+              : null,
+      finalizedAt:
+          map['finalizado_em'] != null
+              ? DateTime.parse(map['finalizado_em'] as String)
+              : null,
+      canceledAt:
+          map['cancelado_em'] != null
+              ? DateTime.parse(map['cancelado_em'] as String)
+              : null,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'titulo': title,
+      'data': date.toIso8601String(),
+      'status': status.name,
+      'criado_em': createdAt?.toIso8601String(),
+      'finalizado_em': finalizedAt?.toIso8601String(),
+      'cancelado_em': canceledAt?.toIso8601String(),
+    };
+  }
+
   Event copyWith({
     int? id,
     String? title,
