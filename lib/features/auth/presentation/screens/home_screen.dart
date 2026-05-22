@@ -1,6 +1,7 @@
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:cash_flow/features/auth/presentation/screens/create_event_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -103,6 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // Header
 
   Widget _header() {
+    final authService = context.watch<ServicoAuth>();
+    final userName = authService.currentUser?.name ?? 'Usuário';
+    final initial = userName.isNotEmpty ? userName[0].toUpperCase() : '?';
+
     return Row(
       children: [
 
@@ -116,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white.withValues(alpha: 0.7),
               border: Border.all(color: AppColors.darkGreen.withValues(alpha: 0.12)),
             ),
-            child: Center(child: Text('K', style: AppTextStyles.title(20))),
+            child: Center(child: Text(initial, style: AppTextStyles.title(20))),
           ),
         ),
 
@@ -126,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Olá, Kauã', style: AppTextStyles.body(18)),
+              Text('Olá, $userName', style: AppTextStyles.body(18)),
               const SizedBox(height: 2),
             ],
           ),
@@ -198,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          CupertinoPageRoute<void>(builder: (_) => const EventDetailScreen()),
+          CupertinoPageRoute<void>(builder: (_) => EventDetailScreen(eventId: eventId)),
         );
       },
 

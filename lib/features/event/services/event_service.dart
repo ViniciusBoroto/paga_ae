@@ -1,41 +1,38 @@
+import 'package:cash_flow/core/utils/database.dart';
 import 'package:cash_flow/models/event.dart';
 import 'package:cash_flow/models/enums.dart';
 import 'package:cash_flow/models/charge.dart';
+import 'package:cash_flow/models/expenditure.dart';
 import 'package:flutter/material.dart';
 
 class EventService extends ChangeNotifier {
-  final List<Event> _events = [];
-  final List<Charge> _charges = [];
-
-  EventService() {
-    // Dados iniciais
-    _events.add(Event(
-      id: 1,
-      title: 'Churrasco do Zé',
-      date: DateTime.now().add(const Duration(days: 10)),
-      status: EventStatus.upcoming,
-      participants: [],
-      createdAt: DateTime.now(),
-    ));
-    _events.add(Event(
-      id: 2,
-      title: 'Aniversário da Susan',
-      date: DateTime.now().subtract(const Duration(days: 5)),
-      status: EventStatus.finalized,
-      participants: [],
-      createdAt: DateTime.now(),
-    ));
-
-    _charges.add(Charge(id: 1, amount: 75.0, fromUserId: 1, toUserId: 2, eventId: 1, createdAt: DateTime.now()));
-    _charges.add(Charge(id: 2, amount: 100.0, fromUserId: 1, toUserId: 3, eventId: 2, createdAt: DateTime.now()));
-  }
+  List<Event> _events = [];
+  List<Charge> _charges = [];
 
   List<Event> get events => List.unmodifiable(_events);
-  
+
   List<Charge> get pendencies => _charges.where((c) => c.paidAt == null).toList();
 
   double get totalOwed {
     return pendencies.fold(0.0, (sum, charge) => sum + charge.amount);
+  }
+
+  Future<void> init() async {
+    final dbEvents = await DatabaseHelper.obterTodosEventos();
+    final dbCharges = await DatabaseHelper.obterTodasCobrancas();
+
+    _events = [];
+    for (final event in dbEvents) {
+      final participants = await DatabaseHelper.obterParticipantesDoEvento(event.id);
+      final expenditures = await DatabaseHelper.obterDespesasDoEvento(event.id);
+      _events.add(event.copyWith(
+        participants: participants,
+        expenditures: expenditures,
+      ));
+    }
+
+    _charges = dbCharges;
+    notifyListeners();
   }
 
   Event? getEventById(int id) {
@@ -46,14 +43,22 @@ class EventService extends ChangeNotifier {
     }
   }
 
-  void createEvent({
+  Future<Event?> getEventByIdFromDb(int id) async {
+    final event = await DatabaseHelper.obterEventoPorId(id);
+    if (event == null) return null;
+    final participants = await DatabaseHelper.obterParticipantesDoEvento(id);
+    final expenditures = await DatabaseHelper.obterDespesasDoEvento(id);
+    return event.copyWith(participants: participants, expenditures: expenditures);
+  }
+
+  Future<void> createEvent({
     required String title,
     required String local,
     required String pixKey,
     required DateTime date,
-  }) {
+  }) async {
     final newEvent = Event(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: 0,
       title: title,
       date: date,
       status: EventStatus.upcoming,
@@ -61,21 +66,63 @@ class EventService extends ChangeNotifier {
       createdAt: DateTime.now(),
     );
 
-    _events.add(newEvent);
+    final id = await DatabaseHelper.inserirEvento(newEvent);
+    final savedEvent = newEvent.copyWith(id: id);
+    _events.insert(0, savedEvent);
     notifyListeners();
   }
 
-  void deleteEvent(int id) {
+  Future<void> deleteEvent(int id) async {
+    await DatabaseHelper.deletarEvento(id);
     _events.removeWhere((e) => e.id == id);
     _charges.removeWhere((c) => c.eventId == id);
     notifyListeners();
   }
 
-  void payCharge(int chargeId) {
+  Future<void> payCharge(int chargeId) async {
     final index = _charges.indexWhere((c) => c.id == chargeId);
     if (index != -1) {
-      _charges[index] = _charges[index].copyWith(paidAt: DateTime.now());
+      final paid = _charges[index].copyWith(paidAt: DateTime.now());
+      await DatabaseHelper.atualizarCobranca(paid);
+      _charges[index] = paid;
       notifyListeners();
     }
+  }
+
+  Future<Expenditure> addExpenditure({
+    required String description,
+    required double amount,
+    required int eventId,
+  }) async {
+    final exp = Expenditure(id: 0, description: description, amount: amount, eventId: eventId);
+    final id = await DatabaseHelper.inserirDespesa(exp);
+    final saved = exp.copyWith(id: id);
+
+    final eventIndex = _events.indexWhere((e) => e.id == eventId);
+    if (eventIndex != -1) {
+      final event = _events[eventIndex];
+      _events[eventIndex] = event.copyWith(
+        expenditures: [...event.expenditures, saved],
+      );
+    }
+    notifyListeners();
+    return saved;
+  }
+
+  Future<void> finalizeEvent(int eventId) async {
+    final event = getEventById(eventId);
+    if (event == null) return;
+
+    final finalized = event.copyWith(
+      status: EventStatus.finalized,
+      finalizedAt: DateTime.now(),
+    );
+    await DatabaseHelper.atualizarEvento(finalized);
+
+    final index = _events.indexWhere((e) => e.id == eventId);
+    if (index != -1) {
+      _events[index] = finalized;
+    }
+    notifyListeners();
   }
 }

@@ -1,9 +1,6 @@
 import 'package:cash_flow/features/auth/components/auth_background.dart';
 import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
-import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
-import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

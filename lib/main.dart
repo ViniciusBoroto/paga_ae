@@ -5,7 +5,6 @@ import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/register_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/home_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/create_event_screen.dart';
-import 'package:cash_flow/features/auth/presentation/screens/event_detail_screen.dart';
 import 'package:cash_flow/features/auth/presentation/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:cash_flow/core/di/injection.dart';
@@ -54,16 +53,13 @@ final GoRouter router = GoRouter(
       path: '/create_event',
       builder: (context, state) => const CreateEventScreen(),
     ),
-
-    GoRoute(
-      path: '/event_detail',
-      builder: (context, state) => const EventDetailScreen(),
-    ),
   ],
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupDependencies();
+  await getIt<EventService>().init();
   runApp(
     MultiProvider(
       providers: [

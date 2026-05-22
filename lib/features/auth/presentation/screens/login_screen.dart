@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _loginFormulario() {
+  Future<void> _loginFormulario() async {
     final formularioValido = _formKey.currentState?.validate() ?? false;
 
     if (!formularioValido) {
@@ -46,12 +46,20 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Login realizado com sucesso!')),
-    );
+    final success = await context.read<ServicoAuth>().login(email, password);
 
-    context.read<ServicoAuth>().login();
-    context.go('/home');
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login realizado com sucesso!')),
+      );
+      context.go('/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email ou senha inválidos')),
+      );
+    }
   }
 
   // Body

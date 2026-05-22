@@ -3,9 +3,11 @@ import 'package:cash_flow/features/auth/components/auth_buttons.dart';
 import 'package:cash_flow/features/auth/components/auth_input.dart';
 import 'package:cash_flow/features/auth/components/auth_styles.dart';
 import 'package:cash_flow/features/auth/presentation/screens/login_screen.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -32,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _registerFormulario() {
+  Future<void> _registerFormulario() async {
     final formularioValido = _formKey.currentState?.validate() ?? false;
 
     if (!formularioValido) {
@@ -47,11 +49,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    await context.read<ServicoAuth>().register(nome, email, password);
+
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Registro bem-sucedido! Bem-vindo, $nome!')),
+      SnackBar(content: Text('Bem-vindo, $nome!')),
     );
 
-    context.go('/login');
+    context.go('/home');
   }
 
   // Body
