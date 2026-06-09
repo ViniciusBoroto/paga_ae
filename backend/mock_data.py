@@ -1,9 +1,24 @@
 from __future__ import annotations
 
 MOCK_USERS = [
-    {"id": 1, "name": "Vinicius", "email": "vinicius@cashflow.dev"},
-    {"id": 2, "name": "Ana", "email": "ana@cashflow.dev"},
-    {"id": 3, "name": "Carlos", "email": "carlos@cashflow.dev"},
+    {
+        "id": 1,
+        "name": "Vinicius",
+        "email": "vinicius@cashflow.dev",
+        "password": "123456",
+    },
+    {
+        "id": 2,
+        "name": "Ana",
+        "email": "ana@cashflow.dev",
+        "password": "123456",
+    },
+    {
+        "id": 3,
+        "name": "Carlos",
+        "email": "carlos@cashflow.dev",
+        "password": "123456",
+    },
 ]
 
 MOCK_EVENTS = [

@@ -1,37 +1,42 @@
-import 'package:cash_flow/core/utils/database.dart';
-import 'package:cash_flow/models/event.dart';
-import 'package:cash_flow/models/enums.dart';
+import 'package:cash_flow/core/network/mock_api_client.dart';
+import 'package:cash_flow/features/auth/services/servico_auth.dart';
 import 'package:cash_flow/models/charge.dart';
+import 'package:cash_flow/models/event.dart';
 import 'package:cash_flow/models/expenditure.dart';
 import 'package:flutter/material.dart';
 
 class EventService extends ChangeNotifier {
+  EventService(this._apiClient, this._authService);
+
+  final MockApiClient _apiClient;
+  final ServicoAuth _authService;
   List<Event> _events = [];
   List<Charge> _charges = [];
 
   List<Event> get events => List.unmodifiable(_events);
 
-  List<Charge> get pendencies => _charges.where((c) => c.paidAt == null).toList();
+  List<Charge> get pendencies =>
+      _charges.where((c) => c.paidAt == null).toList();
 
   double get totalOwed {
     return pendencies.fold(0.0, (sum, charge) => sum + charge.amount);
   }
 
   Future<void> init() async {
-    final dbEvents = await DatabaseHelper.obterTodosEventos();
-    final dbCharges = await DatabaseHelper.obterTodasCobrancas();
+    try {
+      final eventsResponse = await _apiClient.getList('/events');
+      final chargesResponse = await _apiClient.getList('/charges');
 
-    _events = [];
-    for (final event in dbEvents) {
-      final participants = await DatabaseHelper.obterParticipantesDoEvento(event.id);
-      final expenditures = await DatabaseHelper.obterDespesasDoEvento(event.id);
-      _events.add(event.copyWith(
-        participants: participants,
-        expenditures: expenditures,
-      ));
+      _events = eventsResponse
+          .map((json) => Event.fromJson(json as Map<String, dynamic>))
+          .toList();
+      _charges = chargesResponse
+          .map((json) => Charge.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (_) {
+      _events = [];
+      _charges = [];
     }
-
-    _charges = dbCharges;
     notifyListeners();
   }
 
@@ -44,11 +49,8 @@ class EventService extends ChangeNotifier {
   }
 
   Future<Event?> getEventByIdFromDb(int id) async {
-    final event = await DatabaseHelper.obterEventoPorId(id);
-    if (event == null) return null;
-    final participants = await DatabaseHelper.obterParticipantesDoEvento(id);
-    final expenditures = await DatabaseHelper.obterDespesasDoEvento(id);
-    return event.copyWith(participants: participants, expenditures: expenditures);
+    final response = await _apiClient.getMap('/events/$id');
+    return Event.fromJson(response);
   }
 
   Future<void> createEvent({
@@ -57,23 +59,20 @@ class EventService extends ChangeNotifier {
     required String pixKey,
     required DateTime date,
   }) async {
-    final newEvent = Event(
-      id: 0,
-      title: title,
-      date: date,
-      status: EventStatus.upcoming,
-      participants: [],
-      createdAt: DateTime.now(),
-    );
-
-    final id = await DatabaseHelper.inserirEvento(newEvent);
-    final savedEvent = newEvent.copyWith(id: id);
+    final response = await _apiClient.post('/events', {
+      'title': title,
+      'date': date.toIso8601String(),
+      'creatorId': _authService.currentUser?.id,
+      'local': local,
+      'pixKey': pixKey,
+    });
+    final savedEvent = Event.fromJson(response);
     _events.insert(0, savedEvent);
     notifyListeners();
   }
 
   Future<void> deleteEvent(int id) async {
-    await DatabaseHelper.deletarEvento(id);
+    await _apiClient.delete('/events/$id');
     _events.removeWhere((e) => e.id == id);
     _charges.removeWhere((c) => c.eventId == id);
     notifyListeners();
@@ -82,9 +81,8 @@ class EventService extends ChangeNotifier {
   Future<void> payCharge(int chargeId) async {
     final index = _charges.indexWhere((c) => c.id == chargeId);
     if (index != -1) {
-      final paid = _charges[index].copyWith(paidAt: DateTime.now());
-      await DatabaseHelper.atualizarCobranca(paid);
-      _charges[index] = paid;
+      final response = await _apiClient.patch('/charges/$chargeId/pay');
+      _charges[index] = Charge.fromJson(response);
       notifyListeners();
     }
   }
@@ -94,9 +92,11 @@ class EventService extends ChangeNotifier {
     required double amount,
     required int eventId,
   }) async {
-    final exp = Expenditure(id: 0, description: description, amount: amount, eventId: eventId);
-    final id = await DatabaseHelper.inserirDespesa(exp);
-    final saved = exp.copyWith(id: id);
+    final response = await _apiClient.post('/events/$eventId/expenditures', {
+      'description': description,
+      'amount': amount,
+    });
+    final saved = Expenditure.fromJson(response);
 
     final eventIndex = _events.indexWhere((e) => e.id == eventId);
     if (eventIndex != -1) {
@@ -110,19 +110,11 @@ class EventService extends ChangeNotifier {
   }
 
   Future<void> finalizeEvent(int eventId) async {
-    final event = getEventById(eventId);
-    if (event == null) return;
-
-    final finalized = event.copyWith(
-      status: EventStatus.finalized,
-      finalizedAt: DateTime.now(),
-    );
-    await DatabaseHelper.atualizarEvento(finalized);
-
     final index = _events.indexWhere((e) => e.id == eventId);
-    if (index != -1) {
-      _events[index] = finalized;
-    }
+    if (index == -1) return;
+
+    final response = await _apiClient.patch('/events/$eventId/finalize');
+    _events[index] = Event.fromJson(response);
     notifyListeners();
   }
 }

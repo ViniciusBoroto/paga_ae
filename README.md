@@ -1,16 +1,47 @@
-# cash_flow
+# PagaAE
 
-A new Flutter project.
+Aplicativo Flutter para gerenciar eventos, gastos compartilhados e cobrancas entre participantes.
 
-## Getting Started
+## Como rodar para teste
 
-This project is a starting point for a Flutter application.
+### 1. Subir a API mockada
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+cd /Users/kaua/Desktop/paga_ae/backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+A API vai ficar disponivel em `http://127.0.0.1:8000`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 2. Rodar o app Flutter
+
+Em outro terminal:
+
+```bash
+cd /Users/kaua/Desktop/paga_ae
+source ~/.zshrc
+flutter pub get
+flutter run -d "iPhone"
+```
+
+Se o Flutter pedir para escolher o dispositivo, selecione o simulador listado.
+
+## Usuario para teste
+
+Use qualquer uma destas credenciais mockadas:
+
+- Email: `vinicius@cashflow.dev`
+  Senha: `123456`
+- Email: `ana@cashflow.dev`
+  Senha: `123456`
+- Email: `carlos@cashflow.dev`
+  Senha: `123456`
+
+## Observacoes
+
+- O app agora consome a API mockada local em `http://127.0.0.1:8000`.
+- Em simulador iOS, `127.0.0.1` funciona normalmente.
+- Em dispositivo fisico, sera preciso trocar a URL da API para o IP da maquina na mesma rede.

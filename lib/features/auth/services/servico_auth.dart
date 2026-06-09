@@ -1,8 +1,13 @@
-import 'package:cash_flow/core/utils/database.dart';
+import 'dart:io';
+
+import 'package:cash_flow/core/network/mock_api_client.dart';
 import 'package:cash_flow/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ServicoAuth extends ChangeNotifier {
+  ServicoAuth(this._apiClient);
+
+  final MockApiClient _apiClient;
   bool _autenticado = false;
   User? _currentUser;
 
@@ -10,19 +15,27 @@ class ServicoAuth extends ChangeNotifier {
   User? get currentUser => _currentUser;
 
   Future<bool> login(String email, String senha) async {
-    final user = await DatabaseHelper.obterUsuarioPorEmailESenha(email, senha);
-    if (user != null) {
-      _currentUser = user;
+    try {
+      final response = await _apiClient.post('/auth/login', {
+        'email': email,
+        'password': senha,
+      });
+      _currentUser = User.fromJson(response);
       _autenticado = true;
       notifyListeners();
       return true;
+    } on HttpException {
+      return false;
     }
-    return false;
   }
 
   Future<void> register(String nome, String email, String senha) async {
-    final id = await DatabaseHelper.inserirUsuario(nome, email, senha);
-    _currentUser = User(id: id, name: nome, email: email);
+    final response = await _apiClient.post('/auth/register', {
+      'name': nome,
+      'email': email,
+      'password': senha,
+    });
+    _currentUser = User.fromJson(response);
     _autenticado = true;
     notifyListeners();
   }
